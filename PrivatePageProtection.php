@@ -88,27 +88,50 @@ function privateppRenderTag($parser, $param1 = '', $param2 = '')
  */
 function privateppGetAllowedGroups($title)
 {
-    $result = array();
     $id = $title->getArticleID();
 
     if ($id == 0) {
         return array();
     }
 
+    $Ids = array($id);
+
+    $out = RequestContext::getMain()->getOutput();
+    $categories = getCategories($out->getTitle());
+
     $dbr = wfGetDB(DB_SLAVE);
+
+    if (!empty($categories)) {
+        $res = $dbr->select(array('page'),
+            array('page_id', 'page_title'),
+            array('page_title' => $categories),
+            __METHOD__);
+
+        foreach ($res as $row) {
+            if ($row->page_title) {
+                $Ids[$row->page_title] = intval($row->page_id);
+            }
+        }
+
+        $dbr->freeResult($res);
+    }
+
     $res = $dbr->select(array('page_props'),
         array('pp_value'),
-        array('pp_page' => $id, 'pp_propname' => 'ppp_allowed_groups'),
+        array('pp_page' => $Ids, 'pp_propname' => 'ppp_allowed_groups'),
         __METHOD__);
 
+    $groups = array();
     if ($res !== false) {
         foreach ($res as $row) {
-            $result[] = $row->pp_value;
+            $groups[] = $row->pp_value;
         }
     }
 
+    $groups = array_unique($groups);
+
     #TODO: use object cache?! get from parser cache?!
-    return $result;
+    return $groups;
 }
 
 function privateppGetAccessError($groups, $user)
@@ -119,7 +142,11 @@ function privateppGetAccessError($groups, $user)
     if (is_string($groups)) $groups = explode('|', $groups);
 
     $ugroups = $user->getEffectiveGroups(true);
-    ;
+
+    # Sysop super permissions
+    if (in_array('sysop', $ugroups)) {
+        $groups[] = 'sysop';
+    }
 
     $match = array_intersect($ugroups, $groups);
 
@@ -169,4 +196,33 @@ function privateppArticleSave(&$wikipage, &$user, &$text, &$summary,
 
     #$status->fatal( $err[0], $err[1], $err[2] ); # message, groups, count
     #return false;
+}
+
+function getCategories(Title $title)
+{
+    $categoriesTree = array_values_recursive($title->getParentCategoryTree());
+    $categoriesTree = array_unique($categoriesTree);
+    $categories = array();
+    foreach ($categoriesTree as $category) {
+        if (strpos($category, ':')) {
+            $category = explode(':', $category);
+            $categories[] = $category[1];
+        }
+    }
+
+    return $categories;
+}
+
+function array_values_recursive($array)
+{
+    $arrayKeys = array();
+
+    foreach ($array as $key => $value) {
+        $arrayKeys[] = $key;
+        if (!empty($value)) {
+            $arrayKeys = array_merge($arrayKeys, array_values_recursive($value));
+        }
+    }
+
+    return $arrayKeys;
 }
