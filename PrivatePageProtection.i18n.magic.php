@@ -7,4 +7,5 @@ $magicWords = array();
 
 $magicWords['en'] = array(
 	'allow-groups' => array( 0, 'allow-groups', 'allowed-groups', 'ppp' ),
+	'deny-recursive' => array( 0, 'deny-recursive'),
 );
