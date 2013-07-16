@@ -146,29 +146,11 @@ class PrivatePageProtection
             return array();
         }
 
-        $Ids = array($id);
+        $page = array($title->getText() => $id);
+        $Ids = $page;
         $out = RequestContext::getMain()->getOutput();
 
-        $res = $dbr->select(array('page_props'),
-            array('pp_value'),
-            array('pp_page' => $Ids, 'pp_propname' => 'ppp_deny_recursive'),
-            __METHOD__);
-
-        $denyRecursive = array();
-        if ($res !== false) {
-            foreach ($res as $row) {
-                $denyRecursive[] = $row->pp_value;
-            }
-        }
-
-        $dbr->freeResult($res);
-
         $categories = $this->getCategories($out->getTitle());
-
-
-        if (!empty($denyRecursive)) {
-            $categories = array($categories[0]);
-        }
 
         if (!empty($categories)) {
             $res = $dbr->select(array('page'),
@@ -187,7 +169,37 @@ class PrivatePageProtection
 
         $res = $dbr->select(array('page_props'),
             array('pp_value'),
-            array('pp_page' => $Ids, 'pp_propname' => 'ppp_allowed_groups'),
+            array('pp_page' => array_values($Ids), 'pp_propname' => 'ppp_deny_recursive'),
+            __METHOD__);
+
+        $denyRecursive = array();
+        if ($res !== false) {
+            foreach ($res as $row) {
+                $denyRecursive[] = $row->pp_value;
+            }
+        }
+
+        $dbr->freeResult($res);
+
+        if (!empty($denyRecursive)) {
+            $structure = $out->getTitle()->getParentCategoryTree();
+            $categoriesTree = $this->array_values_recursive(array_slice($structure, 0, 1));
+            $categoriesTree = array_unique($categoriesTree);
+
+            $categories = $page;
+            foreach ($categoriesTree as $category) {
+                if (strpos($category, ':')) {
+                    $category = explode(':', $category);
+                    $categories[$category[1]] =  null;
+                }
+            }
+
+            $Ids = array_intersect_key($Ids, $categories);
+        }
+
+        $res = $dbr->select(array('page_props'),
+            array('pp_value'),
+            array('pp_page' => array_values($Ids), 'pp_propname' => 'ppp_allowed_groups'),
             __METHOD__);
 
         $groups = array();
