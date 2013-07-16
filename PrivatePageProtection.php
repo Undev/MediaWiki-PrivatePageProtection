@@ -82,16 +82,11 @@ class PrivatePageProtection
 
     function onArticleSave(&$wikipage, &$user, &$text, &$summary, $minor, $watchthis, $sectionanchor, &$flags, &$status)
     {
-        $userGroups = $user->getGroups();
-
-        if (!in_array('locker', $userGroups) and !in_array('sysop', $userGroups)) {
-            return false;
-        }
-
         $editInfo = $wikipage->prepareTextForEdit($text, null, $user);
         $groups = $editInfo->output->getProperty('ppp_allowed_groups');
 
-        $err = $this->privateppGetAccessError($groups, $user);
+//        $err = $this->privateppGetAccessError($groups, $user);
+        $err = $this->getSaveAccess($groups, $user);
 
         if (!$err) {
             return true;
@@ -190,7 +185,7 @@ class PrivatePageProtection
             foreach ($categoriesTree as $category) {
                 if (strpos($category, ':')) {
                     $category = explode(':', $category);
-                    $categories[$category[1]] =  null;
+                    $categories[$category[1]] = null;
                 }
             }
 
@@ -237,6 +232,37 @@ class PrivatePageProtection
         $match = array_intersect($ugroups, $groups);
 
         if ($match) {
+            # group is allowed - keep processing
+            return null;
+        } else {
+            # group is denied - abort
+            $groupLinks = array_map(array('User', 'makeGroupLinkWiki'), $groups);
+
+            $err = array(
+                'badaccess-groups',
+                $wgLang->commaList($groupLinks),
+                count($groups)
+            );
+
+            return $err;
+        }
+    }
+
+    public function getSaveAccess($groups, $user)
+    {
+        global $wgLang;
+
+        if (!$groups) {
+            return null;
+        }
+
+        if (is_string($groups)) {
+            $groups = explode('|', $groups);
+        }
+
+        $ugroups = $user->getEffectiveGroups(true);
+
+        if (in_array('locker', $ugroups)) {
             # group is allowed - keep processing
             return null;
         } else {
