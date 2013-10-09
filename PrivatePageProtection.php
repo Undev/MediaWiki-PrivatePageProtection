@@ -101,7 +101,7 @@ class PrivatePageProtection
 
 	function onSkinTemplateOutputPageBeforeExec($sk, VectorTemplate &$tpl)
 	{
-		if( RequestContext::getMain()->getOutput()->isArticle() and !empty(self::$groups)) {
+		if (RequestContext::getMain()->getOutput()->isArticle() and !empty(self::$groups)) {
 			$data = $tpl->data['credits'];
 			$message = wfMessage('privatepp-notify', implode(', ', self::$groups), count(self::$groups))->inContentLanguage()->parse();
 			$data .= "<p>$message</p>";
