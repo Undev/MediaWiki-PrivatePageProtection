@@ -38,13 +38,14 @@ $wgExtensionCredits['parserfunction'][] = array(
     'descriptionmsg' => 'privatepp-desc',
 );
 
-$wgExtensionMessagesFiles['PrivatePageProtection'] = dirname(__FILE__) . '/PrivatePageProtection.i18n.php';
-$wgExtensionMessagesFiles['PrivatePageProtectionMagic'] = dirname(__FILE__) . '/PrivatePageProtection.i18n.magic.php';
+$wgExtensionMessagesFiles[] = dirname(__FILE__) . '/PrivatePageProtection.i18n.php';
+$wgExtensionMessagesFiles[] = dirname(__FILE__) . '/PrivatePageProtection.i18n.magic.php';
 
 
 class PrivatePageProtection
 {
     static public $denyRecursive;
+	static public $groups;
 
     function __construct()
     {
@@ -54,6 +55,8 @@ class PrivatePageProtection
         $wgHooks['ParserFirstCallInit'][] = $this;
 
         $wgHooks['ArticleSave'][] = $this;
+
+	    $wgHooks['SkinTemplateOutputPageBeforeExec'][] = $this;
     }
 
     function __toString()
@@ -70,8 +73,8 @@ class PrivatePageProtection
 
     function ongetUserPermissionsErrorsExpensive($title, $user, $action, &$result)
     {
-        $groups = $this->privateppGetAllowedGroups($title);
-        $result = $this->privateppGetAccessError($groups, $user);
+	    self::$groups = $this->privateppGetAllowedGroups($title);
+        $result = $this->privateppGetAccessError(self::$groups, $user);
 
         if ($result) {
             return false;
@@ -95,6 +98,19 @@ class PrivatePageProtection
         $err[0] = 'privatepp-lockout-prevented'; #override message key
         throw new PermissionsError('edit', array($err));
     }
+
+	function onSkinTemplateOutputPageBeforeExec($sk, VectorTemplate &$tpl)
+	{
+		if( RequestContext::getMain()->getOutput()->isArticle() and !empty(self::$groups)) {
+			$data = $tpl->data['credits'];
+			$message = wfMessage('privatepp-notify', implode(', ', self::$groups), count(self::$groups))->inContentLanguage()->parse();
+			$data .= "<p>$message</p>";
+
+			$tpl->set('credits', $data);
+		}
+
+		return true;
+	}
 
     static public function privateppRenderTag($parser, $param1 = '', $param2 = '')
     {
@@ -239,9 +255,9 @@ class PrivatePageProtection
             $groupLinks = array_map(array('User', 'makeGroupLinkWiki'), $groups);
 
             $err = array(
-                'badaccess-groups',
-                $wgLang->commaList($groupLinks),
-                count($groups)
+                'badaccess',
+//                $wgLang->commaList($groupLinks),
+//                count($groups)
             );
 
             return $err;

@@ -8,15 +8,23 @@
 
 $messages = array();
 
+/** Russian
+ * @author Denisov Denis
+ */
+$messages['ru'] = array(
+	'privatepp-notify' => 'Данная страница доступна участником состоящих в {{PLURAL:$2|группе|в следующих группах}}: $1.',
+);
+
 /** English
  * @author Daniel Kinzler
  */
 $messages['en'] = array(
 	'privatepp-desc' => 'Allows restricting page access based on user group',
-	
-	'privatepp-lockout-prevented' => 'Lockout prevented: You have tried to restrict access to this page to {{PLURAL:$2|the group|one of the groups}} $1. 
-Since you are not a member of {{PLURAL:$2|this group|any of these groups}}, you would not be able to access the page after saving it. 
+
+	'privatepp-lockout-prevented' => 'Lockout prevented: You have tried to restrict access to this page to {{PLURAL:$2|the group|one of the groups}} $1.
+Since you are not a member of {{PLURAL:$2|this group|any of these groups}}, you would not be able to access the page after saving it.
 Saving was aborted to avoid this.',
+	'privatepp-notify' => 'Allows restricting page access based on user {{PLURAL:$2|group|groups}}: $1.',
 );
 
 /** Message documentation (Message documentation)
@@ -41,8 +49,8 @@ $messages['be-tarask'] = array(
  */
 $messages['de'] = array(
 	'privatepp-desc' => 'Ermöglicht das Beschränken das Zugangs zu Wikiseiten auf Basis von Benutzergruppen',
-	'privatepp-lockout-prevented' => 'Die Aussperrung wurde verhindert: Du hast versucht, den Zugang zu dieser Seite auf {{PLURAL:$2|die Benutzergruppe|die Benutzergruppen}} $1 zu beschränken. 
-Da du kein Mitglied {{PLURAL:$2|dieser Benutzergruppe|einer dieser Benutzergruppen}} bist, könntest du nach dem Speichern nicht mehr auf die Seite zugreifen. 
+	'privatepp-lockout-prevented' => 'Die Aussperrung wurde verhindert: Du hast versucht, den Zugang zu dieser Seite auf {{PLURAL:$2|die Benutzergruppe|die Benutzergruppen}} $1 zu beschränken.
+Da du kein Mitglied {{PLURAL:$2|dieser Benutzergruppe|einer dieser Benutzergruppen}} bist, könntest du nach dem Speichern nicht mehr auf die Seite zugreifen.
 Um dies zu vermeiden, wurde das Speichern abgebrochen.',
 );
 
@@ -51,8 +59,8 @@ Um dies zu vermeiden, wurde das Speichern abgebrochen.',
  * @author Kghbln
  */
 $messages['de-formal'] = array(
-	'privatepp-lockout-prevented' => 'Die Aussperrung wurde verhindert: Sie haben versucht, den Zugang zu dieser Seite auf {{PLURAL:$2|die Benutzergruppe|die Benutzergruppen}} $1 zu beschränken. 
-Da Sie kein Mitglied {{PLURAL:$2|dieser Benutzergruppe|einer dieser Benutzergruppen}} sind, könnten Sie nach dem Speichern nicht mehr auf die Seite zugreifen. 
+	'privatepp-lockout-prevented' => 'Die Aussperrung wurde verhindert: Sie haben versucht, den Zugang zu dieser Seite auf {{PLURAL:$2|die Benutzergruppe|die Benutzergruppen}} $1 zu beschränken.
+Da Sie kein Mitglied {{PLURAL:$2|dieser Benutzergruppe|einer dieser Benutzergruppen}} sind, könnten Sie nach dem Speichern nicht mehr auf die Seite zugreifen.
 Um dies zu vermeiden, wurde das Speichern abgebrochen.',
 );
 
@@ -119,8 +127,8 @@ Składowanje je so přetorhnyło, zo by to wobešło.',
  */
 $messages['ia'] = array(
 	'privatepp-desc' => 'Permitte restringer le accesso a paginas secundo le gruppo del usator',
-	'privatepp-lockout-prevented' => 'Exclusion prevenite: Tu ha tentate limitar le accesso a iste pagina {{PLURAL:$2|al gruppo|a un del gruppos}} $1. 
-Post que tu non es membro de {{PLURAL:$2|iste gruppo|alcun de iste gruppos}}, tu non poterea acceder al pagina post salveguardar lo. 
+	'privatepp-lockout-prevented' => 'Exclusion prevenite: Tu ha tentate limitar le accesso a iste pagina {{PLURAL:$2|al gruppo|a un del gruppos}} $1.
+Post que tu non es membro de {{PLURAL:$2|iste gruppo|alcun de iste gruppos}}, tu non poterea acceder al pagina post salveguardar lo.
 Le salveguarda ha essite abortate pro evitar isto.',
 );
 
@@ -175,8 +183,8 @@ $messages['lb'] = array(
  */
 $messages['mk'] = array(
 	'privatepp-desc' => 'Овозможува ограничување на пристапот до страници во зависност од корисничката група',
-	'privatepp-lockout-prevented' => 'Ограничувањето на пристапот е спречено: Се обидовте страницата да ја направите пристапна само за членови на {{PLURAL:$2|групата|една од групите}} $1. 
-Бидејќи не членувате во {{PLURAL:$2|групата|ниедна од нив}}, самите вие нема да можете да пристапите на неа откако ќе ја зачувате. 
+	'privatepp-lockout-prevented' => 'Ограничувањето на пристапот е спречено: Се обидовте страницата да ја направите пристапна само за членови на {{PLURAL:$2|групата|една од групите}} $1.
+Бидејќи не членувате во {{PLURAL:$2|групата|ниедна од нив}}, самите вие нема да можете да пристапите на неа откако ќе ја зачувате.
 За да се избегне ова, зачувувањето е откажано.',
 );
 
@@ -195,7 +203,7 @@ $messages['nl'] = array(
 $messages['pl'] = array(
 	'privatepp-desc' => 'Pozwala na ograniczanie dostępu strony na podstawie grupy użytkownika',
 	'privatepp-lockout-prevented' => 'Uniemożliwiono blokadę: próbujesz ograniczyć dostęp do tej strony dla {{PLURAL:$2|grupy|jednej z grup}}  $1 .
-Ponieważ nie jesteś członkiem  {{PLURAL:$2|tej grupy|żadnej tych grup}}, nie udałoby ci się uzyskać dostępu do strony po zapisaniu tego ustawienia. 
+Ponieważ nie jesteś członkiem  {{PLURAL:$2|tej grupy|żadnej tych grup}}, nie udałoby ci się uzyskać dostępu do strony po zapisaniu tego ustawienia.
 Zapisywanie zostało przerwane aby temu zapobiec.',
 );
 
@@ -205,7 +213,7 @@ Zapisywanie zostało przerwane aby temu zapobiec.',
  */
 $messages['pms'] = array(
 	'privatepp-desc' => "A përmëtt dë strenze l'acess a la pàgina an dovrand na partìa d'utent",
-	'privatepp-lockout-prevented' => "Blocagi evità: A l'ha provà a arstrenze l'acess a sta pàgina-sì a {{PLURAL:$2|la partìa|un-a dle partìe}} $1. 
+	'privatepp-lockout-prevented' => "Blocagi evità: A l'ha provà a arstrenze l'acess a sta pàgina-sì a {{PLURAL:$2|la partìa|un-a dle partìe}} $1.
 Da già ch'a l'é pa un mémber {{PLURAL:$2|dë sta partìa|d'un-a dë ste partìe}}, a podrìe pa esse bon a acede a la pàgina apress d'avèjla salvà.
 Ël salvatagi a l'é stàit abortì për evité sòn.",
 );
