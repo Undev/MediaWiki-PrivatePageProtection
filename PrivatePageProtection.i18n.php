@@ -12,7 +12,7 @@ $messages = array();
  * @author Denisov Denis
  */
 $messages['ru'] = array(
-	'privatepp-notify' => 'Данная страница доступна участником состоящих в {{PLURAL:$2|группе|в следующих группах}}: $1.',
+	'privatepp-notify' => 'Данная страница доступна участникам из {{PLURAL:$2|группы|из следующих групп}}: $1.',
 );
 
 /** English
