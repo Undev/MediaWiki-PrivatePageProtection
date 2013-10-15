@@ -99,7 +99,7 @@ class PrivatePageProtection
         throw new PermissionsError('edit', array($err));
     }
 
-	function onSkinTemplateOutputPageBeforeExec($sk, VectorTemplate &$tpl)
+	function onSkinTemplateOutputPageBeforeExec($sk, &$tpl)
 	{
 		if (RequestContext::getMain()->getOutput()->isArticle() and !empty(self::$groups)) {
 			$data = $tpl->data['credits'];
