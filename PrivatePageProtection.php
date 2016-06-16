@@ -234,6 +234,11 @@ class PrivatePageProtection
             return null;
         }
 
+        // In some cases, $groups is an array
+        if (is_array($groups) && count($groups) == 1) {
+            $groups = $groups[0];
+        }
+
         if (is_string($groups)) {
             $groups = explode('|', $groups);
         }
@@ -241,13 +246,13 @@ class PrivatePageProtection
         $ugroups = $user->getEffectiveGroups(true);
 
         # Sysop super permissions
-        if (in_array('sysop', $ugroups)) {
+        if (in_array('sysop', $ugroups) && !in_array('sysop', $groups)) {
             $groups[] = 'sysop';
         }
 
         $match = array_intersect($ugroups, $groups);
 
-        if ($match) {
+        if (count($match) > 0) {
             # group is allowed - keep processing
             return null;
         } else {
@@ -278,7 +283,7 @@ class PrivatePageProtection
 
         $ugroups = $user->getEffectiveGroups(true);
 
-        if (in_array('locker', $ugroups)) {
+        if (count(array_intersect($groups, $ugroups)) > 0)  {
             # group is allowed - keep processing
             return null;
         } else {
